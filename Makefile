@@ -1,6 +1,6 @@
 CC = gcc -Wall -g
 
-SRCS = snake.c common.c 
+SRCS = snake.c common.c #game.c 
 
 OBJS = $(SRCS:.c=.o)
 LIBS = -lncurses

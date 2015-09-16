@@ -32,6 +32,8 @@ void set_direction(segment *h, int d);
 
 void rewrite_snake(segment *h);
 
+void rewrite_field(field *f);
+
 void recalc_snake(segment *h);
 
 void set_direction(segment *h, int d);

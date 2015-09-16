@@ -12,8 +12,8 @@ int main(int argc, char* const argv[]) {
     getmaxyx(stdscr, maxy, maxx);
 
     segment *h = init_snake(LENGTH);
-    field *f = init_field(maxy, maxx);
-    set_apple(f);
+    //field *f = init_field(maxy, maxx);
+    //set_apple(f);
 
     initscr();
     clear();
@@ -31,9 +31,12 @@ int main(int argc, char* const argv[]) {
             }
         }
     }
-
+//refresh();
     while(1) {
+
         rewrite_snake(h);
+        //rewrite_field(f);
+
         usleep(TIME);
         key = nb_getch();
         if(key != -1) {
@@ -146,6 +149,12 @@ void recalc_snake(segment *h) {
         break;
  
     }
+    
+}
+
+void rewrite_field(field *f) {
+    mvaddch(f->y_apple, f->x_apple, APPLE);
+    refresh();
 }
 
 int nb_getch() {
