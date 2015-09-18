@@ -9,12 +9,7 @@
 int main(int argc, char* const argv[]) {
     
     int maxx, maxy, y=0, x=0, key;
-    getmaxyx(stdscr, maxy, maxx);
-
-    segment *h = init_snake(LENGTH);
-    //field *f = init_field(maxy, maxx);
-    //set_apple(f);
-
+    
     initscr();
     clear();
     noecho();
@@ -22,8 +17,18 @@ int main(int argc, char* const argv[]) {
     keypad(stdscr, TRUE); 
     curs_set(0);
 
- 
-    
+    getmaxyx(stdscr, maxy, maxx);
+
+    segment *h;
+
+    if((h = malloc(sizeof(segment))) == NULL) {
+        exit(-1);
+    }
+
+    h = init_snake(h, LENGTH);
+    field *f = init_field(maxy, maxx);
+    set_apple(f);
+   
     for (x = 0; x < maxx; x++) {
         for (y = 0; y < maxy; y++) {
             if(x == 0 || x == (maxx - 1) || y == 0 || y == (maxy - 1)) {
@@ -31,11 +36,11 @@ int main(int argc, char* const argv[]) {
             }
         }
     }
-//refresh();
     while(1) {
 
         rewrite_snake(h);
-        //rewrite_field(f);
+        rewrite_field(f);
+        eat(f, h);
 
         usleep(TIME);
         key = nb_getch();
@@ -98,16 +103,11 @@ void rewrite_snake(segment *h) {
     refresh();
 }
 
-segment *init_snake(int length) {
+segment *init_snake(segment *h, int length) {
 
-    segment *h;
     segment *s;
     segment *n;
     int i;
-
-    if((h = (segment *)malloc(sizeof(segment))) == NULL) {
-        exit(-1);
-    }
 
     if((s = (segment *)malloc(sizeof(segment))) == NULL) {
         exit(-1);

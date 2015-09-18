@@ -3,7 +3,7 @@
 #define DOWN 1
 #define LEFT 2
 #define RIGHT 3
-#define TIME 10000
+#define TIME 100000
 #define LENGTH 3 
 #define HEAD '@'
 #define EMPTY ' '
@@ -26,7 +26,7 @@ typedef struct field {
     int x_apple;
 } field;
 
-segment *init_snake(int length);
+segment *init_snake(segment *h, int length);
 
 void set_direction(segment *h, int d);
 
@@ -43,3 +43,5 @@ int nb_getch();
 field *init_field(int maxy, int maxx);
 
 void set_apple(field *f);
+
+void eat(field *f, segment *h);
