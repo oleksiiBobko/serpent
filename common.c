@@ -1,3 +1,4 @@
+#include<syslog.h>
 #include"snake.h"
 #include"common.h"
 
@@ -16,4 +17,14 @@ void set_init_state(segment *s) {
     s->xs = 10;
     s->y_old = -1;
     s->x_old = -1;
+}
+
+int is_debug() {
+    return DEBUG_MODE;
+}
+
+void write_log(char *message) {
+    if(is_debug()) {
+        syslog(LOG_INFO, message);
+    }
 }

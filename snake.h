@@ -9,6 +9,11 @@
 #define EMPTY ' '
 #define SEG '*'
 #define APPLE '+'
+#define SNAKE "snake"
+
+#define DEBUG_MODE 0
+#define TRUE 1
+#define FALSE 0
 
 typedef struct segment {
     struct segment *next;
@@ -45,3 +50,5 @@ field *init_field(int maxy, int maxx);
 void set_apple(field *f);
 
 void eat(field *f, segment *h);
+
+int check_obstacle(field *f, segment *h);

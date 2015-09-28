@@ -3,13 +3,15 @@
 #include<stdlib.h>
 #include<unistd.h>
 #include<sys/time.h>
+#include<syslog.h>
 #include"snake.h"
 #include"common.h"
 
 int main(int argc, char* const argv[]) {
     
     int maxx, maxy, y=0, x=0, key;
-    
+    openlog(SNAKE, LOG_PID|LOG_CONS, LOG_USER);
+
     initscr();
     clear();
     noecho();
@@ -36,12 +38,16 @@ int main(int argc, char* const argv[]) {
             }
         }
     }
+
     while(1) {
 
         rewrite_snake(h);
         rewrite_field(f);
         eat(f, h);
-
+        if(check_obstacle(f, h)) {
+            h->ys = 10;
+            h->xs = 10;
+        }
         usleep(TIME);
         key = nb_getch();
         if(key != -1) {
@@ -101,7 +107,8 @@ void rewrite_snake(segment *h) {
 
     mvaddch(s->y_old, s->x_old, EMPTY);
     refresh();
-}
+
+} 
 
 segment *init_snake(segment *h, int length) {
 
