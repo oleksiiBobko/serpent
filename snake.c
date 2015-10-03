@@ -27,7 +27,7 @@ int main(int argc, char* const argv[]) {
         exit(-1);
     }
 
-    h = init_snake(h, LENGTH);
+    h = init_snake(h, LENGTH, maxy);
     field *f = init_field(maxy, maxx);
     set_apple(f);
    
@@ -41,14 +41,7 @@ int main(int argc, char* const argv[]) {
 
     while(1) {
 
-        rewrite_snake(h);
-        rewrite_field(f);
-        eat(f, h);
-        if(check_obstacle(f, h)) {
-            h->ys = 10;
-            h->xs = 10;
-        }
-        usleep(TIME);
+       usleep(TIME);
         key = nb_getch();
         if(key != -1) {
         switch(key) {
@@ -73,6 +66,18 @@ int main(int argc, char* const argv[]) {
                 exit(0);
         }
         }
+
+        eat(f, h);
+        if(check_obstacle(f, h)) {
+	    vanish_snake(h);
+            h->ys = maxy - 2;
+            h->xs = 1;
+	    h->d = RIGHT;
+        }
+ 
+        rewrite_snake(h);
+        rewrite_field(f);
+
    }
 
    endwin();
@@ -110,7 +115,7 @@ void rewrite_snake(segment *h) {
 
 } 
 
-segment *init_snake(segment *h, int length) {
+segment *init_snake(segment *h, int length, int maxy) {
 
     segment *s;
     segment *n;
@@ -135,7 +140,8 @@ segment *init_snake(segment *h, int length) {
 
     }
 
-    set_init_state(h);
+    h->ys = maxy - 2;
+    h->xs = 1;
     h->d = RIGHT;
     return h;
 }
@@ -179,5 +185,28 @@ int nb_getch() {
     }
 
     return r;
+}
+
+void vanish_snake(segment *head) {
+    int i = 0;
+    for (i; i <= 5; ++i) {
+
+        segment *h = head;
+        if(i % 2 != 0) {    
+            mvaddch(h->ys, h->xs, EMPTY);
+	} else {
+	    mvaddch(h->ys, h->xs, HEAD);	
+	}
+            while(h->next != NULL) {
+                h = h->next;
+		if(i % 2 != 0) {
+                    mvaddch(h->ys, h->xs, EMPTY);
+		} else {
+		    mvaddch(h->ys, h->xs, SEG);	
+		}
+            }
+	refresh();    
+	usleep(TIME * 2);    
+    }
 }
 

@@ -54,8 +54,15 @@ void eat(field *f, segment *h) {
 }
 
 int check_obstacle(field *f, segment *h) {
-    if(h->ys <= 1 || h->xs <= 1 || h->ys >= (f->height - 1) || h->xs >= (f->width - 1)) {
+    if(h->ys <= 1 && h->d == UP) {
         return TRUE;
-    }
+    } else if(h->xs <= 1 && h->d == LEFT) {
+        return TRUE;	    
+    } else if(h->ys >= (f->height - 2) && h->d == DOWN) {
+        return TRUE;	    
+    } else if(h->xs >= (f->width - 2) && h->d == RIGHT) {
+        return TRUE;
+    } 
+    
     return FALSE;
 }

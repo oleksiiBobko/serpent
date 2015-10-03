@@ -3,7 +3,7 @@
 #define DOWN 1
 #define LEFT 2
 #define RIGHT 3
-#define TIME 100000
+#define TIME 90000
 #define LENGTH 3 
 #define HEAD '@'
 #define EMPTY ' '
@@ -31,7 +31,7 @@ typedef struct field {
     int x_apple;
 } field;
 
-segment *init_snake(segment *h, int length);
+segment *init_snake(segment *h, int length, int maxy);
 
 void set_direction(segment *h, int d);
 
@@ -52,3 +52,5 @@ void set_apple(field *f);
 void eat(field *f, segment *h);
 
 int check_obstacle(field *f, segment *h);
+
+void vanish_snake(segment *head);
