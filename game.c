@@ -62,7 +62,37 @@ int check_obstacle(field *f, segment *h) {
         return TRUE;	    
     } else if(h->xs >= (f->width - 2) && h->d == RIGHT) {
         return TRUE;
-    } 
+    }
+
+    int x_head = h->xs;
+    int y_head = h->ys;
+    unsigned char direction = h->d;
+
+    while(h->next != NULL) {
+        h = h->next;
+        switch(direction) {
+            case UP:
+                if(h->ys == y_head - 1 && h->xs == x_head) {
+                    return TRUE;
+                }
+            break;
+            case DOWN:
+                if(h->ys == y_head + 1 && h->xs == x_head) {
+                    return TRUE;
+                }
+            break;
+            case LEFT:
+                if(h->ys == y_head && h->xs == x_head - 1) {
+                    return TRUE;
+                }
+            break;
+            case RIGHT:
+                if(h->ys == y_head && h->xs == x_head + 1) {
+                    return TRUE;
+                }
+            break;
+        }
+   }
     
     return FALSE;
 }

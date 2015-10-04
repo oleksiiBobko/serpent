@@ -68,11 +68,13 @@ int main(int argc, char* const argv[]) {
         }
 
         eat(f, h);
+
         if(check_obstacle(f, h)) {
-	    vanish_snake(h);
+            vanish_snake(h);
+            collide_snake(h);
             h->ys = maxy - 2;
             h->xs = 1;
-	    h->d = RIGHT;
+	        h->d = RIGHT;
         }
  
         rewrite_snake(h);
@@ -192,23 +194,38 @@ int nb_getch() {
 void vanish_snake(segment *head) {
     int i = 0;
     for (i; i <= 5; ++i) {
-
         segment *h = head;
-        if(i % 2 != 0) {    
-            mvaddch(h->ys, h->xs, EMPTY);
-	} else {
-	    mvaddch(h->ys, h->xs, HEAD);	
-	}
-            while(h->next != NULL) {
-                h = h->next;
-		if(i % 2 != 0) {
-                    mvaddch(h->ys, h->xs, EMPTY);
-		} else {
-		    mvaddch(h->ys, h->xs, SEG);	
-		}
-            }
-	refresh();    
-	usleep(TIME * 2);    
+            if(i % 2 != 0) {    
+                mvaddch(h->ys, h->xs, EMPTY);
+	        } else {
+	            mvaddch(h->ys, h->xs, HEAD);	
+	        }
+        refresh(); 
+        while(h->next != NULL) {
+            h = h->next;
+		    if(i % 2 != 0) {
+                mvaddch(h->ys, h->xs, EMPTY);
+		    } else {
+		        mvaddch(h->ys, h->xs, SEG);	
+		    }
+            refresh(); 
+        }
+
+	   
+	usleep(TIME * 2);
+
+    }
+
+}
+
+void collide_snake(segment *h) {
+
+    while(h->next != NULL) {
+        h = h->next;
+        h->ys = -1;
+        h->xs = -1;
+        h->y_old = -1;
+        h->x_old = -1;
     }
 }
 
