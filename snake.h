@@ -1,8 +1,8 @@
 #define ESCAPE 27
 #define UP 0
-#define DOWN 1
+#define DOWN 255 
 #define LEFT 2
-#define RIGHT 3
+#define RIGHT 253
 #define TIME 90000
 #define LENGTH 3 
 #define HEAD '@'
@@ -21,7 +21,7 @@ typedef struct segment {
     int ys;
     int x_old;
     int y_old;
-    int d;
+    unsigned char d;
 } segment;
 
 typedef struct field {
@@ -33,15 +33,13 @@ typedef struct field {
 
 segment *init_snake(segment *h, int length, int maxy);
 
-void set_direction(segment *h, int d);
+void set_direction(segment *h, unsigned char d);
 
 void rewrite_snake(segment *h);
 
 void rewrite_field(field *f);
 
 void recalc_snake(segment *h);
-
-void set_direction(segment *h, int d);
 
 int nb_getch();
 

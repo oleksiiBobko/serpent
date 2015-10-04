@@ -84,8 +84,10 @@ int main(int argc, char* const argv[]) {
    return 0;
 }
 
-void set_direction(segment *h, int d) {
-    h->d = d;
+void set_direction(segment *h, unsigned char d) {
+    if(h->d != (unsigned char)~d) {
+        h->d = d;
+    }
 }
 
 void rewrite_snake(segment *h) {
