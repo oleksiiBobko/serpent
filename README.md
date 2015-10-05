@@ -9,3 +9,5 @@ space bar - pouse
 ESC - exit (without option)
 
 game ends automatically at once when life count equals zero
+
+![img](/snake/master/img/snake.png?raw=true "screenshot")
