@@ -10,4 +10,4 @@ ESC - exit (without option)
 
 game ends automatically at once when life count equals zero
 
-![img](/snake/blob/master/img/snake.png?raw=true "screenshot")
+![img](/snake/blob/master/snake/img/snake.png?raw=true "screenshot")
