@@ -31,6 +31,8 @@ void eat(field *f, segment *h) {
 
     if(f->y_apple == h->ys && f->x_apple == h->xs) {
         
+        h->counter++; 
+
         if((n = malloc(sizeof(segment))) == NULL) {
             exit(-1);
         }
@@ -38,6 +40,7 @@ void eat(field *f, segment *h) {
         n->y_old = -1;
         n->x_old = -1;
         n->next = NULL;
+
 
         while(s->next != NULL) {
             s = s->next;
@@ -54,6 +57,7 @@ void eat(field *f, segment *h) {
 }
 
 int check_obstacle(field *f, segment *h) {
+    
     if(h->ys <= 1 && h->d == UP) {
         return TRUE;
     } else if(h->xs <= 1 && h->d == LEFT) {

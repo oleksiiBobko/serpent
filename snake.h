@@ -9,7 +9,9 @@
 #define EMPTY ' '
 #define SEG '*'
 #define APPLE '+'
+#define BORDER 'o'
 #define SNAKE "snake"
+#define LIFE 5
 
 #define DEBUG_MODE 0
 #define TRUE 1
@@ -21,6 +23,8 @@ typedef struct segment {
     int ys;
     int x_old;
     int y_old;
+    int counter;
+    int life;
     unsigned char d;
 } segment;
 

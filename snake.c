@@ -9,7 +9,12 @@
 
 int main(int argc, char* const argv[]) {
     
-    int maxx, maxy, y=0, x=0, key;
+    int maxx,
+        maxy, 
+        y = 0, 
+        x = 0, 
+        key; 
+
     openlog(SNAKE, LOG_PID|LOG_CONS, LOG_USER);
 
     initscr();
@@ -34,13 +39,15 @@ int main(int argc, char* const argv[]) {
     for (x = 0; x < maxx; x++) {
         for (y = 0; y < maxy; y++) {
             if(x == 0 || x == (maxx - 1) || y == 0 || y == (maxy - 1)) {
-                mvaddch(y, x, 'o');
+                mvaddch(y, x, BORDER);
             }
         }
     }
+    mvprintw(maxy - 1, 0, "window x=%d, y=%d    ", maxx, maxy);
 
     while(1) {
 
+    mvprintw(0, 0, "lifes=%d; length=%d; location x=%d, y=%d    ", h->life, h->counter, h->xs, h->ys);
        usleep(TIME);
         key = nb_getch();
         if(key != -1) {
@@ -60,7 +67,11 @@ int main(int argc, char* const argv[]) {
             case KEY_RIGHT:
                 set_direction(h, RIGHT);
             break;
- 
+
+            case ' ':
+                getch();
+            break;
+             
             case ESCAPE:
                 endwin();
                 exit(0);
@@ -75,6 +86,11 @@ int main(int argc, char* const argv[]) {
             h->ys = maxy - 2;
             h->xs = 1;
 	        h->d = RIGHT;
+            h->life--;
+            if(h->life == 0) {
+                endwin();
+                exit(0);
+            }
         }
  
         rewrite_snake(h);
@@ -147,6 +163,8 @@ segment *init_snake(segment *h, int length, int maxy) {
     h->ys = maxy - 2;
     h->xs = 1;
     h->d = RIGHT;
+    h->counter = LENGTH;
+    h->life = LIFE;
     return h;
 }
 
