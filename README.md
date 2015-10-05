@@ -2,7 +2,7 @@
 
 This is classic snake game written in c using ncurses.
 
-controll:
+control:
 
 UP, DOWN, LEFT, RIGHT arrows - set snake direction
 space bar - pouse
