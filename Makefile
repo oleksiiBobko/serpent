@@ -1,8 +1,8 @@
 CC = gcc -Wall -g
 
-SRCS = snake.c common.c game.c 
+SRC = snake.c common.c game.c 
 
-OBJS = $(SRCS:.c=.o)
+OBJS = $(SRC:.c=.o)
 LIBS = -lncurses
 
 all: snake 
@@ -13,6 +13,7 @@ all: snake
 snake: $(OBJS)
 	$(CC) $(LIBS) $(OBJS)  -o $@
 
+.PHONY: clean
 clean: 
 	rm -f *~ *.o snake 
 
