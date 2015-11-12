@@ -1,5 +1,6 @@
 #include<stdlib.h>
 #include<syslog.h>
+#include<time.h>
 #include"snake.h"
 
 field *init_field(int height, int width) {

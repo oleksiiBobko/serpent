@@ -11,7 +11,11 @@ all: snake
 	$(CC) -c $*.c -o $*.o
 
 snake: $(OBJS)
-	$(CC) $(LIBS) $(OBJS)  -o $@
+	$(CC)  $(OBJS) $(LIBS) -o $@
+
+.PHONY: test
+test:
+	@echo $(value PREFIX)
 
 .PHONY: clean
 clean: 
