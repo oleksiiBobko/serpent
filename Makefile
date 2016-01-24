@@ -3,7 +3,7 @@ CC = gcc -Wall -g
 SRC = snake.c common.c game.c 
 
 OBJS = $(SRC:.c=.o)
-LIBS = -lncurses
+LIBS = -lncurses -lm
 
 all: snake 
 

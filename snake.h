@@ -17,6 +17,8 @@
 #define TRUE 1
 #define FALSE 0
 
+#define PI 3.14159265
+
 typedef struct segment {
     struct segment *next;
     int xs;
@@ -34,6 +36,11 @@ typedef struct field {
     int y_apple;
     int x_apple;
 } field;
+
+typedef struct point {
+    int x;
+    int y;
+} point;
 
 segment *init_snake(segment *h, int length, int maxy);
 
@@ -56,3 +63,5 @@ void eat(field *f, segment *h);
 int check_obstacle(field *f, segment *h);
 
 void vanish_snake(segment *head);
+
+void point_on_circle(float r, float a, int oy, int ox, point *p);

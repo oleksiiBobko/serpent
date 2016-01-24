@@ -4,6 +4,7 @@
 #include<unistd.h>
 #include<sys/time.h>
 #include<syslog.h>
+#include<math.h>
 #include"snake.h"
 #include"common.h"
 
@@ -35,7 +36,24 @@ int main(int argc, char* const argv[]) {
     h = init_snake(h, LENGTH, maxy);
     field *f = init_field(maxy, maxx);
     set_apple(f);
-   
+
+    point *p;
+
+    if((p = malloc(sizeof(point))) == NULL)  {
+        exit(-1);
+    }
+    
+    for(x = 0; x < 900; x++) {
+        int r = (int)(maxy / 2) - 3;
+        int posy = (int)(maxy / 2);
+        int posx = (int)(maxx / 2);    
+        point_on_circle(r, x, posy, posx, p);
+        mvaddch(p->y, p->x, BORDER);
+        char str[25];
+        sprintf(str, "p->y = %d, p->x = %d", p->y, p->x);
+        syslog(LOG_INFO, str);
+    }
+
     for (x = 0; x < maxx; x++) {
         for (y = 0; y < maxy; y++) {
             if(x == 0 || x == (maxx - 1) || y == 0 || y == (maxy - 1)) {
@@ -245,5 +263,10 @@ void collide_snake(segment *h) {
         h->y_old = -1;
         h->x_old = -1;
     }
+}
+
+void point_on_circle(float r, float a, int oy, int ox, point *p) {
+    p->x = (int)(r * cos(a * PI / 180)) + ox;
+    p->y = (int)(r * sin(a * PI / 180)) + oy;
 }
 
