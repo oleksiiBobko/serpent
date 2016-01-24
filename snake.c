@@ -189,6 +189,9 @@ void recalc_snake(segment *h) {
 
 void rewrite_field(field *f) {
     mvaddch(f->y_apple, f->x_apple, APPLE);
+    if(f->next != NULL) {
+        mvaddch(f->next->x, f->next->y, BORDER);
+    }
     refresh();
 }
 

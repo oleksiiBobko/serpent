@@ -12,8 +12,9 @@
 #define BORDER 'o'
 #define SNAKE "snake"
 #define LIFE 5
+#define LVL 5
 
-#define DEBUG_MODE 0
+#define DEBUG_MODE 1 
 #define TRUE 1
 #define FALSE 0
 
@@ -33,7 +34,15 @@ typedef struct field {
     int width;
     int y_apple;
     int x_apple;
+    struct obs *next;
 } field;
+
+typedef struct obs {
+    int x;
+    int y;
+    struct obs *next;
+    struct obs *prev;
+} obs;
 
 segment *init_snake(segment *h, int length, int maxy);
 
@@ -52,6 +61,8 @@ field *init_field(int maxy, int maxx);
 void set_apple(field *f);
 
 void eat(field *f, segment *h);
+
+//void lvl_up(field *f, int count);
 
 int check_obstacle(field *f, segment *h);
 

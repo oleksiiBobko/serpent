@@ -11,6 +11,7 @@ field *init_field(int height, int width) {
     }
     f->width = width;
     f->height = height;
+    f->next = NULL;
     return f;
 }
 
@@ -25,7 +26,6 @@ void set_apple(field *f) {
 void eat(field *f, segment *h) {
 
     write_log("begin editing");
-    syslog(LOG_INFO, "begin eating");
 
     segment *n;
     segment *s = h->next;
@@ -49,12 +49,41 @@ void eat(field *f, segment *h) {
 
         s->next = n;
 
+        if((h->counter - LENGTH) % LVL == 0) {
+            lvl_up(f, h->counter);
+        }
+
         set_apple(f); 
  
     }
 
     syslog(LOG_INFO, "end eating");
 
+}
+
+void lvl_up(field *f, int count) {
+    int lvl = count / LVL;
+
+    obs *o;
+    //int h = field->height;
+    //int w = field->width;
+    
+    switch(lvl) {
+        case 1:
+            if((o = (obs *)malloc(sizeof(obs))) == NULL) {
+                exit(-1);
+            }
+            o->x = 10;
+            o->y = 15;
+            f->next = o;
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        default:
+            break;    
+    }
 }
 
 int check_obstacle(field *f, segment *h) {
