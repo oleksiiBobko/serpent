@@ -1,5 +1,5 @@
 #include<syslog.h>
-#include"snake.h"
+#include"serpent.h"
 #include"common.h"
 
 void store_coords(segment *s) {

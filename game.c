@@ -1,7 +1,7 @@
 #include<stdlib.h>
 #include<syslog.h>
 #include<time.h>
-#include"snake.h"
+#include"serpent.h"
 
 field *init_field(int height, int width) {
     field *f;

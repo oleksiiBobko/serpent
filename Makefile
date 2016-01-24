@@ -1,16 +1,16 @@
 CC = gcc -Wall -g
 
-SRC = snake.c common.c game.c 
+SRC = serpent.c common.c game.c 
 
 OBJS = $(SRC:.c=.o)
 LIBS = -lncurses -lm
 
-all: snake 
+all: serpent 
 
 .c.o:
 	$(CC) -c $*.c -o $*.o
 
-snake: $(OBJS)
+serpent: $(OBJS)
 	$(CC)  $(OBJS) $(LIBS) -o $@
 
 .PHONY: test
@@ -19,15 +19,15 @@ test:
 
 .PHONY: clean
 clean: 
-	rm -f *~ *.o snake 
+	rm -f *~ *.o serpent 
 
 PREFIX = /usr/local
 
-install: snake
+install: serpent
 	    mkdir -p $(DESTDIR)$(PREFIX)/bin
-		    cp $< $(DESTDIR)$(PREFIX)/bin/snake
+		    cp $< $(DESTDIR)$(PREFIX)/bin/serpent
 
 uninstall:
-	    rm -f $(DESTDIR)$(PREFIX)/bin/snake
+	    rm -f $(DESTDIR)$(PREFIX)/bin/serpent
 
 
