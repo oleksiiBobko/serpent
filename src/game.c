@@ -23,16 +23,16 @@ void set_apple(field *f) {
 
 }
 
-void eat(field *f, segment *h) {
+void eat(field *f, struct Segment h) {
 
     write_log("begin editing");
 
     segment *n;
-    segment *s = h->next;
+    segment *s = h.next;
 
-    if(f->y_apple == h->ys && f->x_apple == h->xs) {
+    if(f->y_apple == h.ys && f->x_apple == h.xs) {
 
-        h->counter++; 
+        h.counter++;
 
         if((n = malloc(sizeof(segment))) == NULL) {
             exit(-1);
@@ -49,8 +49,8 @@ void eat(field *f, segment *h) {
 
         s->next = n;
 
-        if((h->counter - LENGTH) % LVL == 0) {
-            lvl_up(f, h->counter);
+        if((h.counter - LENGTH) % LVL == 0) {
+            lvl_up(f, h.counter);
         }
 
         set_apple(f); 
@@ -86,47 +86,48 @@ void lvl_up(field *f, int count) {
     }
 }
 
-int check_obstacle(field *f, segment *h) {
+int check_obstacle(field *f, struct Segment h) {
     
-    if(h->ys <= 1 && h->d == UP) {
+    if(h.ys <= 1 && h.d == UP) {
         return TRUE;
-    } else if(h->xs <= 1 && h->d == LEFT) {
+    } else if(h.xs <= 1 && h.d == LEFT) {
         return TRUE;
-    } else if(h->ys >= (f->height - 2) && h->d == DOWN) {
+    } else if(h.ys >= (f->height - 2) && h.d == DOWN) {
         return TRUE;
-    } else if(h->xs >= (f->width - 2) && h->d == RIGHT) {
+    } else if(h.xs >= (f->width - 2) && h.d == RIGHT) {
         return TRUE;
     }
 
-    int x_head = h->xs;
-    int y_head = h->ys;
-    unsigned char direction = h->d;
+    int x_head = h.xs;
+    int y_head = h.ys;
+    unsigned char direction = h.d;
 
-    while(h->next != NULL) {
-        h = h->next;
+    struct Segment *current = &h;
+
+    while((current = current->next) != NULL) {
         switch(direction) {
             case UP:
-                if(h->ys == y_head - 1 && h->xs == x_head) {
+                if(h.ys == y_head - 1 && h.xs == x_head) {
                     return TRUE;
                 }
             break;
             case DOWN:
-                if(h->ys == y_head + 1 && h->xs == x_head) {
+                if(h.ys == y_head + 1 && h.xs == x_head) {
                     return TRUE;
                 }
             break;
             case LEFT:
-                if(h->ys == y_head && h->xs == x_head - 1) {
+                if(h.ys == y_head && h.xs == x_head - 1) {
                     return TRUE;
                 }
             break;
             case RIGHT:
-                if(h->ys == y_head && h->xs == x_head + 1) {
+                if(h.ys == y_head && h.xs == x_head + 1) {
                     return TRUE;
                 }
             break;
         }
    }
-    
+
     return FALSE;
 }

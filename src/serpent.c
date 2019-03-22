@@ -10,11 +10,7 @@
 
 int main(int argc, char* const argv[]) {
 
-    int maxx,
-        maxy,
-        y = 0,
-        x = 0,
-        key;
+    int maxx, maxy, y = 0, x = 0, key;
 
     openlog(SNAKE, LOG_PID|LOG_CONS, LOG_USER);
 
@@ -27,17 +23,11 @@ int main(int argc, char* const argv[]) {
 
     getmaxyx(stdscr, maxy, maxx);
 
-    segment *h;
-
-    if((h = malloc(sizeof(segment))) == NULL) {
-        exit(-1);
-    }
-
-    h = init_snake(h, LENGTH, maxy);
+    struct Segment h = init_snake(LENGTH, maxy);
     field *f = init_field(maxy, maxx);
     set_apple(f);
 
-    point *p;
+/*    point *p;
 
     if((p = malloc(sizeof(point))) == NULL)  {
         exit(-1);
@@ -52,7 +42,7 @@ int main(int argc, char* const argv[]) {
         char str[25];
         sprintf(str, "p->y = %d, p->x = %d", p->y, p->x);
         syslog(LOG_INFO, str);
-    }
+    }*/
 
     for (x = 0; x < maxx; x++) {
         for (y = 0; y < maxy; y++) {
@@ -65,25 +55,25 @@ int main(int argc, char* const argv[]) {
 
     while(1) {
 
-    mvprintw(0, 0, "lifes=%d; length=%d; location x=%d, y=%d    ", h->life, h->counter, h->xs, h->ys);
+    mvprintw(0, 0, "lifes=%d; length=%d; location x=%d, y=%d    ", h.life, h.counter, h.xs, h.ys);
        usleep(TIME);
         key = nb_getch();
         if(key != -1) {
         switch(key) {
             case KEY_UP:
-                set_direction(h, UP);
+                set_direction(&h, UP);
             break;
 
             case KEY_DOWN:
-                set_direction(h, DOWN);
+                set_direction(&h, DOWN);
             break;
 
             case KEY_LEFT:
-                set_direction(h, LEFT);
+                set_direction(&h, LEFT);
             break;
 
             case KEY_RIGHT:
-                set_direction(h, RIGHT);
+                set_direction(&h, RIGHT);
             break;
 
             case ' ':
@@ -101,17 +91,17 @@ int main(int argc, char* const argv[]) {
         if(check_obstacle(f, h)) {
             vanish_snake(h);
             collide_snake(h);
-            h->ys = maxy - 2;
-            h->xs = 1;
-            h->d = RIGHT;
-            h->life--;
-            if(h->life == 0) {
+            h.ys = maxy - 2;
+            h.xs = 1;
+            h.d = RIGHT;
+            h.life--;
+            if(h.life == 0) {
                 endwin();
                 exit(0);
             }
         }
 
-        rewrite_snake(h);
+        rewrite_snake(&h);
         rewrite_field(f);
 
    }
@@ -120,7 +110,7 @@ int main(int argc, char* const argv[]) {
    return 0;
 }
 
-void set_direction(segment *h, unsigned char d) {
+void set_direction(struct Segment *h, unsigned char d) {
     if(h->d != (unsigned char)~d) {
         h->d = d;
     }
@@ -134,12 +124,12 @@ void rewrite_snake(segment *h) {
     mvaddch(h->ys, h->xs, HEAD);
     mvaddch(h->y_old, h->x_old, SEG);
 
-    segment *s = h->next;
+    struct Segment *s = h->next;
 
     store_coords(s);
     make_mv(s, h);
 
-    segment *n;
+    struct Segment *n;
 
     while(s->next != NULL) {
         n = s->next;
@@ -153,11 +143,12 @@ void rewrite_snake(segment *h) {
 
 }
 
-segment *init_snake(segment *h, int length, int maxy) {
+struct Segment init_snake(int length, int maxy) {
+
+    struct Segment h;
 
     segment *s;
     segment *n;
-    int i;
 
     if((s = (segment *)malloc(sizeof(segment))) == NULL) {
         exit(-1);
@@ -165,8 +156,9 @@ segment *init_snake(segment *h, int length, int maxy) {
 
     set_init_state(s);
 
-    h->next = s;
+    h.next = s;
 
+    int i;
     for(i = 0; i <= length; i++) {
         if((n = (segment *)malloc(sizeof(segment))) == NULL) {
             exit(-1);
@@ -178,15 +170,17 @@ segment *init_snake(segment *h, int length, int maxy) {
 
     }
 
-    h->ys = maxy - 2;
-    h->xs = 1;
-    h->d = RIGHT;
-    h->counter = LENGTH;
-    h->life = LIFE;
+    n->next = NULL;
+
+    h.ys = maxy - 2;
+    h.xs = 1;
+    h.d = RIGHT;
+    h.counter = LENGTH;
+    h.life = LIFE;
     return h;
 }
 
-void recalc_snake(segment *h) {
+void recalc_snake(struct Segment *h) {
     switch(h->d) {
         case UP:
            h->ys = h->ys - 1;
@@ -230,10 +224,10 @@ int nb_getch() {
     return r;
 }
 
-void vanish_snake(segment *head) {
+void vanish_snake(struct Segment head) {
     int i = 0;
-    for (i; i <= 5; ++i) {
-        segment *h = head;
+    for (i = 0; i <= 5; ++i) {
+        segment *h = &head;
             if(i % 2 != 0) {
                 mvaddch(h->ys, h->xs, EMPTY);
             } else {
@@ -250,21 +244,22 @@ void vanish_snake(segment *head) {
             refresh();
         }
 
-
     usleep(TIME * 2);
 
     }
 
 }
 
-void collide_snake(segment *h) {
+void collide_snake(struct Segment h) {
 
-    while(h->next != NULL) {
-        h = h->next;
-        h->ys = -1;
-        h->xs = -1;
-        h->y_old = -1;
-        h->x_old = -1;
+    struct Segment *s = &h;
+
+    while(s->next != NULL) {
+        s = s->next;
+        s->ys = -1;
+        s->xs = -1;
+        s->y_old = -1;
+        s->x_old = -1;
     }
 }
 

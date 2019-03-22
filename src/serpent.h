@@ -20,8 +20,8 @@
 
 #define PI 3.14159265
 
-typedef struct segment {
-    struct segment *next;
+typedef struct Segment {
+    struct Segment *next;
     int xs;
     int ys;
     int x_old;
@@ -51,15 +51,15 @@ typedef struct point {
     int y;
 } point;
 
-segment *init_snake(segment *h, int length, int maxy);
+struct Segment init_snake(int length, int maxy);
 
-void set_direction(segment *h, unsigned char d);
+void set_direction(struct Segment *h, unsigned char d);
 
-void rewrite_snake(segment *h);
+void rewrite_snake(struct Segment *h);
 
 void rewrite_field(field *f);
 
-void recalc_snake(segment *h);
+void recalc_snake(struct Segment *h);
 
 int nb_getch();
 
@@ -67,12 +67,14 @@ field *init_field(int maxy, int maxx);
 
 void set_apple(field *f);
 
-void eat(field *f, segment *h);
+void eat(field *f, struct Segment h);
 
 void lvl_up(field *f, int count);
 
-int check_obstacle(field *f, segment *h);
+int check_obstacle(field *f, struct Segment h);
 
-void vanish_snake(segment *head);
+void vanish_snake(struct Segment head);
 
 void point_on_circle(float r, float a, int oy, int ox, point *p);
+
+void collide_snake(struct Segment h);
