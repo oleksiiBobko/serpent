@@ -1,33 +1,36 @@
-CC = gcc -Wall -g
+CC := gcc # This is the main compiler
+# CC := clang --analyze # and comment out the linker last line for sanity
+SRCDIR := src
+BUILDDIR := build
+TARGET := bin/out
+ 
+SRCEXT := c
+SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
+CFLAGS := -g -Wall
+LIB := -lncurses -lm
+# -lcurl
+#-pthread -lmongoclient -L lib -lboost_thread-mt -lboost_filesystem-mt -lboost_system-mt
+INC := -I include
 
-SRC = serpent.c common.c game.c 
+$(TARGET): $(OBJECTS)
+	@echo " Linking..."
+	@echo " $(CC) $^ -o -static $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
 
-OBJS = $(SRC:.c=.o)
-LIBS = -lncurses -lm
+$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
+	@mkdir -p $(BUILDDIR)
+	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
-all: serpent 
+clean:
+	@echo " Cleaning..."; 
+	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
 
-.c.o:
-	$(CC) -c $*.c -o $*.o
+# Tests
+tester:
+	$(CC) $(CFLAGS) test/tester.cpp $(INC) $(LIB) -o bin/tester
 
-serpent: $(OBJS)
-	$(CC)  $(OBJS) $(LIBS) -o $@
-
-.PHONY: test
-test:
-	@echo $(value PREFIX)
+# Spikes
+ticket:
+	$(CC) $(CFLAGS) spikes/ticket.cpp $(INC) $(LIB) -o bin/ticket
 
 .PHONY: clean
-clean: 
-	rm -f *~ *.o serpent 
-
-PREFIX = /usr/local
-
-install: serpent
-	    mkdir -p $(DESTDIR)$(PREFIX)/bin
-		    cp $< $(DESTDIR)$(PREFIX)/bin/serpent
-
-uninstall:
-	    rm -f $(DESTDIR)$(PREFIX)/bin/serpent
-
-

@@ -1,4 +1,4 @@
-#include<ncurses.h>
+#include<curses.h>
 #include<stdio.h>
 #include<stdlib.h>
 #include<unistd.h>
@@ -9,12 +9,12 @@
 #include"common.h"
 
 int main(int argc, char* const argv[]) {
-    
+
     int maxx,
-        maxy, 
-        y = 0, 
-        x = 0, 
-        key; 
+        maxy,
+        y = 0,
+        x = 0,
+        key;
 
     openlog(SNAKE, LOG_PID|LOG_CONS, LOG_USER);
 
@@ -22,7 +22,7 @@ int main(int argc, char* const argv[]) {
     clear();
     noecho();
     cbreak();
-    keypad(stdscr, TRUE); 
+    keypad(stdscr, TRUE);
     curs_set(0);
 
     getmaxyx(stdscr, maxy, maxx);
@@ -42,11 +42,11 @@ int main(int argc, char* const argv[]) {
     if((p = malloc(sizeof(point))) == NULL)  {
         exit(-1);
     }
-    
+
     for(x = 0; x < 900; x++) {
         int r = (int)(maxy / 2) - 3;
         int posy = (int)(maxy / 2);
-        int posx = (int)(maxx / 2);    
+        int posx = (int)(maxx / 2);
         point_on_circle(r, x, posy, posx, p);
         mvaddch(p->y, p->x, BORDER);
         char str[25];
@@ -89,7 +89,7 @@ int main(int argc, char* const argv[]) {
             case ' ':
                 getch();
             break;
-             
+
             case ESCAPE:
                 endwin();
                 exit(0);
@@ -103,14 +103,14 @@ int main(int argc, char* const argv[]) {
             collide_snake(h);
             h->ys = maxy - 2;
             h->xs = 1;
-	        h->d = RIGHT;
+            h->d = RIGHT;
             h->life--;
             if(h->life == 0) {
                 endwin();
                 exit(0);
             }
         }
- 
+
         rewrite_snake(h);
         rewrite_field(f);
 
@@ -131,7 +131,7 @@ void rewrite_snake(segment *h) {
     store_coords(h);
     recalc_snake(h);
 
-    mvaddch(h->ys, h->xs, HEAD); 
+    mvaddch(h->ys, h->xs, HEAD);
     mvaddch(h->y_old, h->x_old, SEG);
 
     segment *s = h->next;
@@ -151,7 +151,7 @@ void rewrite_snake(segment *h) {
     mvaddch(s->y_old, s->x_old, EMPTY);
     refresh();
 
-} 
+}
 
 segment *init_snake(segment *h, int length, int maxy) {
 
@@ -200,9 +200,9 @@ void recalc_snake(segment *h) {
         case RIGHT:
           h->xs = h->xs + 1;
         break;
- 
+
     }
-    
+
 }
 
 void rewrite_field(field *f) {
@@ -216,7 +216,7 @@ void rewrite_field(field *f) {
 int nb_getch() {
     fd_set rfds;
     struct timeval tv;
-    int r = -1; 
+    int r = -1;
     tv.tv_sec = 0;
     tv.tv_usec = 0;
     FD_ZERO(&rfds);
@@ -234,24 +234,24 @@ void vanish_snake(segment *head) {
     int i = 0;
     for (i; i <= 5; ++i) {
         segment *h = head;
-            if(i % 2 != 0) {    
+            if(i % 2 != 0) {
                 mvaddch(h->ys, h->xs, EMPTY);
-	        } else {
-	            mvaddch(h->ys, h->xs, HEAD);	
-	        }
-        refresh(); 
+            } else {
+                mvaddch(h->ys, h->xs, HEAD);
+            }
+        refresh();
         while(h->next != NULL) {
             h = h->next;
-		    if(i % 2 != 0) {
+            if(i % 2 != 0) {
                 mvaddch(h->ys, h->xs, EMPTY);
-		    } else {
-		        mvaddch(h->ys, h->xs, SEG);	
-		    }
-            refresh(); 
+            } else {
+                mvaddch(h->ys, h->xs, SEG);
+            }
+            refresh();
         }
 
-	   
-	usleep(TIME * 2);
+
+    usleep(TIME * 2);
 
     }
 
@@ -272,4 +272,3 @@ void point_on_circle(float r, float a, int oy, int ox, point *p) {
     p->x = (int)(r * cos(a * PI / 180)) + ox;
     p->y = (int)(r * sin(a * PI / 180)) + oy;
 }
-
